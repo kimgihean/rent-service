@@ -11,6 +11,9 @@ import java.sql.Date;
 @Entity
 @Data
 public class Chatting {
+    /*
+    todo Date created 확인하기, content 부분 자료형 확인하기
+     */
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chattingID;
     @ManyToOne @JoinColumn(name = "sellerUserId")
