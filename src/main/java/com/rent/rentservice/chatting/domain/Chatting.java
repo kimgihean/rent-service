@@ -1,7 +1,9 @@
-package com.rent.rentservice.domain;
+package com.rent.rentservice.chatting.domain;
 
 import javax.persistence.*;
-import com.rent.rentservice.domain.User;
+
+import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.user.domain.User;
 
 import java.sql.Date;
 

@@ -1,6 +1,6 @@
-package com.rent.rentservice.domain;
+package com.rent.rentservice.post.domain;
 
-import com.rent.rentservice.domain.User;
+import com.rent.rentservice.user.domain.User;
 import javax.persistence.*;
 import java.sql.Date;
 

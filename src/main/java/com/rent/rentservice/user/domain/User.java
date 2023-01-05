@@ -1,4 +1,4 @@
-package com.rent.rentservice.domain;
+package com.rent.rentservice.user.domain;
 
 import javax.persistence.*;
 
