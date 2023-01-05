@@ -2,7 +2,7 @@ package com.rent.rentservice.domain;
 
 import com.rent.rentservice.domain.User;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 public class Post {
