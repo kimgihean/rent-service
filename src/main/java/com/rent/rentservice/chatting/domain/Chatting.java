@@ -4,10 +4,12 @@ import javax.persistence.*;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.user.domain.User;
+import lombok.Data;
 
 import java.sql.Date;
 
 @Entity
+@Data
 public class Chatting {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chattingID;
@@ -21,52 +23,4 @@ public class Chatting {
 
     private String content;
     private Date created;
-
-    public Long getChattingID() {
-        return chattingID;
-    }
-
-    public void setChattingID(Long chattingID) {
-        this.chattingID = chattingID;
-    }
-
-    public User getUserSellerID() {
-        return userSellerID;
-    }
-
-    public void setUserSellerID(User userSellerID) {
-        this.userSellerID = userSellerID;
-    }
-
-    public User getUserBuyerID() {
-        return userBuyerID;
-    }
-
-    public void setUserBuyerID(User userBuyerID) {
-        this.userBuyerID = userBuyerID;
-    }
-
-    public Post getPostID() {
-        return postID;
-    }
-
-    public void setPostID(Post postID) {
-        this.postID = postID;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
 }
