@@ -36,6 +36,15 @@ public class PostController {
     }
 
     /**
+     * 검색에 따른 전체 조회
+     */
+    @GetMapping("/posts/search")
+    public List<Post> searchList(String keyword) {
+        List<Post> searchPosts = postRepository.findByTitleContaining(keyword);
+        return searchPosts;
+    }
+
+    /**
      * POST CREATE //post method
      */
     @PostMapping("/posts/create")

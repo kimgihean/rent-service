@@ -2,10 +2,14 @@ package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PostService {
     private PostRepository postRepository;
 
@@ -27,7 +31,6 @@ public class PostService {
      * 전체 게시글 조회
      */
     public List<Post> findAllPost() {
-
         return postRepository.findAll();
     }
 
@@ -40,6 +43,31 @@ public class PostService {
      */
 
     /**
-     * 검색에 따른 게시글 조회
+     * 검색(title)에 따른 게시글 조회
      */
+    @Transactional
+    public List<Post> findBySearch(String keyword) {
+        List<Post> postList = postRepository.findByTitleContaining(keyword);
+        List<Post> searchedPostList = new ArrayList<>();
+
+        if(postList.isEmpty()) return searchedPostList;
+
+        for(Post post : postList) {
+            searchedPostList.add(this.convertEntityInPost(post));
+        }
+
+        return postList;
+    }
+
+    private Post convertEntityInPost(Post post) {
+        return post.builder()
+                .postID(post.getPostID())
+                .userID(post.getUserID())
+                .title(post.getTitle())
+                .period(post.getPeriod())
+                .favorite(post.getFavorite())
+                .build();
+
+
+    }
 }
