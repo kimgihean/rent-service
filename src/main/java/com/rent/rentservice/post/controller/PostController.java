@@ -29,10 +29,10 @@ public class PostController {
      * //todo return data type 학습
      */
     @GetMapping("/posts")
-    public void list(Model model) {
+    public List<Post> list() {
         List<Post> posts = postRepository.findAll();
-        model.addAttribute("posts", posts);
-        //return
+
+        return posts;
     }
 
     /**

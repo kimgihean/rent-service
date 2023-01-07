@@ -18,15 +18,6 @@ public class Post {
     private Date period;
     private int favorite;
 
-    /*
-    @OneToMany
-    @JoinColumn(name = "ADDRESSID")
-    private String addressID;
-    @OneToMany
-    @JoinColumn(name = "CATEGORYID")
-    private String categoryIO;
-     */
-    //private String content; // text
-    //private int cost; // money type
+    //todo make category column
 
 }
