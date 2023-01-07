@@ -19,6 +19,7 @@ public class Post {
     private Date period;
     private int favorite;
 
+    public Post() {}
     @Builder
     public Post(Long postID,
                 User userID,
