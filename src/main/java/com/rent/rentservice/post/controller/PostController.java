@@ -2,6 +2,7 @@ package com.rent.rentservice.post.controller;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -15,14 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController // 이 annotation을 사용하면 메서드마다 ResponseBody를 따로 선언해줄 필요 없음.
+@RequiredArgsConstructor
 public class PostController {
 
-    private PostRepository postRepository;
-
-    @Autowired
-    public PostController(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private final PostRepository postRepository;
 
     /**
      * POST 전체 조회하기 //get method
@@ -56,6 +53,10 @@ public class PostController {
     /**
      * POST CREATE 화면 //get method
      */
+    @PostMapping("/posts/create")
+    public void create() {
+
+    }
 
 
 }

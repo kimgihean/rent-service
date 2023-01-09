@@ -2,6 +2,7 @@ package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,12 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
-    private PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private final PostRepository postRepository;
 
     /**
      * 글 등록
@@ -40,17 +38,22 @@ public class PostService {
     @Transactional
     public List<Post> findBySearch(String keyword) {
         List<Post> postList = postRepository.findByTitleContaining(keyword);
-        List<Post> searchedPostList = new ArrayList<>();
+        List<Post> postListBySearch = new ArrayList<>();
 
-        if(postList.isEmpty()) return searchedPostList;
+        if(postList.isEmpty()) return postListBySearch; //todo exception 처리
 
         for(Post post : postList) {
-            searchedPostList.add(this.convertEntityInPost(post));
+            postListBySearch.add(this.convertEntityInPost(post));
         }
 
-        return postList;
+        return postListBySearch;
     }
 
+    /**
+     * @description build the post constructor
+     * @param post
+     * @return post builder
+     */
     private Post convertEntityInPost(Post post) {
         return post.builder()
                 .postID(post.getPostID())
@@ -64,9 +67,22 @@ public class PostService {
     }
 
     /**
-     * id로 게시글 조회
+     * @description Find all post by post ID
+     * @param ID
+     * @return new post object
      */
+    public List<Post> findByID(Long ID) {
+        List<Post> postList = postRepository.findByPostID(ID);
+        List<Post> postListByID = new ArrayList<>();
 
+        if(postList.isEmpty()) return postListByID; //todo exception 처리
+
+        for(Post post : postList) {
+            postListByID.add(this.convertEntityInPost(post));
+        }
+
+        return postListByID;
+    }
     /**
      * address에 따른 게시글 조회
      */
