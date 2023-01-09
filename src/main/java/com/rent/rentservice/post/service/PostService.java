@@ -35,14 +35,6 @@ public class PostService {
     }
 
     /**
-     * id로 게시글 조회
-     */
-
-    /**
-     * address에 따른 게시글 조회
-     */
-
-    /**
      * 검색(title)에 따른 게시글 조회
      */
     @Transactional
@@ -70,4 +62,12 @@ public class PostService {
 
 
     }
+
+    /**
+     * id로 게시글 조회
+     */
+
+    /**
+     * address에 따른 게시글 조회
+     */
 }
