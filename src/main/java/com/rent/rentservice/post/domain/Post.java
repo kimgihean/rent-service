@@ -26,7 +26,7 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String text;
 
-    public Post() {}
+    protected Post() {}
     @Builder
     public Post(String title,
                 int favorite,
