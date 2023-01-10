@@ -2,16 +2,16 @@ package com.rent.rentservice.post.controller;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
+import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +20,7 @@ import java.util.Optional;
 public class PostController {
 
     private final PostRepository postRepository;
+    private final PostService postService;
 
     /**
      * POST 전체 조회하기 //get method
@@ -45,17 +46,8 @@ public class PostController {
      * POST CREATE //post method
      */
     @PostMapping("/posts/create")
-    public String createPost() {
-
-        return "redirect:/";
-    }
-
-    /**
-     * POST CREATE 화면 //get method
-     */
-    @PostMapping("/posts/create")
-    public void create() {
-
+    public void create(@RequestBody @Valid PostCreateForm request) throws Exception{
+        postService.create(request);
     }
 
 

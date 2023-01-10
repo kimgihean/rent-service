@@ -5,15 +5,13 @@ import javax.persistence.*;
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.user.domain.User;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 
 @Entity
 @Data
 public class Chatting {
-    /*
-    todo Date created 확인하기, content 부분 자료형 확인하기
-     */
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chattingID;
     @ManyToOne @JoinColumn(name = "sellerUserId")
@@ -23,7 +21,9 @@ public class Chatting {
 
     @ManyToOne @JoinColumn(name = "postID")
     private Post postID;
-
+    @Column(columnDefinition = "TEXT")
     private String content;
-    private Date created;
+
+    @CreationTimestamp @Temporal(TemporalType.TIMESTAMP)
+    private Date regDate;
 }

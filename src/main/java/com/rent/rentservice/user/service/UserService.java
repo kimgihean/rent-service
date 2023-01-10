@@ -1,7 +1,7 @@
 package com.rent.rentservice.user.service;
 
 import com.rent.rentservice.user.domain.User;
-import com.rent.rentservice.user.exception.InvaildEmailPattern;
+import com.rent.rentservice.user.exception.InvalidEmailPattern;
 import com.rent.rentservice.user.exception.OverlapUserEmail;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
@@ -31,7 +31,7 @@ public class UserService {
     public void join(JoinForm request) throws Exception {
 
         if(!CommonUtil.isValidEmail(request.getEmail())) {
-            throw new InvaildEmailPattern();
+            throw new InvalidEmailPattern();
         }
 
         // 이메일 중복 유효성 검사

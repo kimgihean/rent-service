@@ -1,7 +1,7 @@
 package com.rent.rentservice.exception.controller;
 
 import com.rent.rentservice.exception.response.ErrorResponse;
-import com.rent.rentservice.user.exception.InvaildEmailPattern;
+import com.rent.rentservice.user.exception.InvalidEmailPattern;
 import com.rent.rentservice.user.exception.OverlapUserEmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -52,9 +52,9 @@ public class ExceptionController {
 
     // 회원가입 이메일 형식아님 -> Throw
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvaildEmailPattern.class)
+    @ExceptionHandler(InvalidEmailPattern.class)
     @ResponseBody
-    public ErrorResponse invaildRequestHandler(InvaildEmailPattern e) {
+    public ErrorResponse invaildRequestHandler(InvalidEmailPattern e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message(e.getMessage())

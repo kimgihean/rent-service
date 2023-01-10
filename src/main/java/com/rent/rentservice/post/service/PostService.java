@@ -2,13 +2,15 @@ package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
+import com.rent.rentservice.post.request.PostCreateForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,10 +20,18 @@ public class PostService {
     /**
      * 글 등록
      */
-    public void create(Post post) {
-        // 게시글 등록의 유효성 검사 필요하지 않을 것 같음
-        // 보안관련 사이트 간 스크립팅 XSS 확인하기
+    public void create(PostCreateForm request) throws Exception{
         //todo XSS in post create
+        //todo address 에 맞게 게시글 작성
+        //좋아요 초기 갯수 0 으로 설정
+        int initFavorite = 0;
+
+        Post post = Post.builder()
+                .title(request.getTitle())
+                .text(request.getText())
+                .favorite(initFavorite)
+                .build();
+
         postRepository.save(post);
     }
 
@@ -54,13 +64,11 @@ public class PostService {
      * @param post
      * @return post builder
      */
-    private Post convertEntityInPost(Post post) {
+    private Post convertEntityInPost(@NotNull Post post) {
         return post.builder()
-                .postID(post.getPostID())
-                .userID(post.getUserID())
                 .title(post.getTitle())
-                .period(post.getPeriod())
                 .favorite(post.getFavorite())
+                .text(post.getText())
                 .build();
 
 

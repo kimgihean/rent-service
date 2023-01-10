@@ -3,9 +3,13 @@ package com.rent.rentservice.post.domain;
 import com.rent.rentservice.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
+
+//todo category
 
 @Entity
 @Data
@@ -16,21 +20,19 @@ public class Post {
     @JoinColumn(name = "USERID")
     private User userID;
     private String title;
-    private Date period;
+    @CreationTimestamp @Temporal(TemporalType.TIMESTAMP)
+    private Date regDate;
     private int favorite;
+    @Column(columnDefinition = "TEXT")
+    private String text;
 
     public Post() {}
     @Builder
-    public Post(Long postID,
-                User userID,
-                String title,
-                Date period,
-                int favorite) {
-        this.postID = postID;
-        this.userID = userID;
+    public Post(String title,
+                int favorite,
+                String text) {
         this.title = title;
-        this.period = period;
         this.favorite = favorite;
+        this.text = text;
     }
-    //todo make category column
 }
