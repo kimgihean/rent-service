@@ -46,6 +46,7 @@ public class UserService {
                         .email(request.getEmail())
                         .phoneNumber(request.getPhoneNumber())
                         .password(aes256.encrypt(request.getPassword()))
+                        .address(request.getAddress())
                         .build();
         userRepository.save(user);
     }
