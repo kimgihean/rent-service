@@ -7,7 +7,7 @@ import com.rent.rentservice.user.domain.User;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Data

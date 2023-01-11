@@ -31,12 +31,16 @@ public class JoinForm {
     @NotBlank(message = "비밀번호를 입력해주세요")
     private String password;
 
+    @NotBlank(message = "주소를 입력해주세요")
+    private String address;
+
     @Builder
-    public JoinForm(String name, String nickName, String email, String phoneNumber, String password) {
+    public JoinForm(String name, String nickName, String email, String phoneNumber, String password, String address) {
         this.name = name;
         this.nickName = nickName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.address = address;
     }
 }

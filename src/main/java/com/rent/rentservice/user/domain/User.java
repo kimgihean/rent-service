@@ -33,16 +33,19 @@ public class User {
 
     private String password;
 
+    private String address;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     public Date regDate;
 
     @Builder
-    public User(String name, String nickName, String phoneNumber, String password, String email) {
+    public User(String name, String nickName, String phoneNumber, String password, String email, String address) {
         this.name = name;
         this.nickName = nickName;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.email = email;
+        this.address = address;
     }
 }
