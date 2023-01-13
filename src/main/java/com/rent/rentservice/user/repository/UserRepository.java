@@ -1,7 +1,6 @@
 package com.rent.rentservice.user.repository;
 
 import com.rent.rentservice.user.domain.User;
-import com.rent.rentservice.user.request.LoginForm;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

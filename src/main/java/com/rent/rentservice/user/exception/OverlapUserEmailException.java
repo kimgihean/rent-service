@@ -6,10 +6,10 @@ package com.rent.rentservice.user.exception;
  * @since 2023.01.07
  */
 
-public class OverlapUserEmail extends RuntimeException {
+public class OverlapUserEmailException extends RuntimeException {
     private static final String MESSAGE = "중복된 이메일이 존재합니다";
 
-    public OverlapUserEmail() {super(MESSAGE);}
+    public OverlapUserEmailException() {super(MESSAGE);}
 
-    public OverlapUserEmail(Throwable cause) {super(MESSAGE, cause);}
+    public OverlapUserEmailException(Throwable cause) {super(MESSAGE, cause);}
 }

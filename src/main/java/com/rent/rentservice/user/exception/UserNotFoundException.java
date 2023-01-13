@@ -6,11 +6,11 @@ package com.rent.rentservice.user.exception;
  * @since 2023.01.13
  */
 
-public class UserNotFound extends RuntimeException {
+public class UserNotFoundException extends RuntimeException {
 
     private static final String MESSAGE = "이메일 또는 비밀번호를 올바르게 입력해주세요";
 
-    public UserNotFound() {super(MESSAGE);}
+    public UserNotFoundException() {super(MESSAGE);}
 
-    public UserNotFound(Throwable cause) {super(MESSAGE, cause);}
+    public UserNotFoundException(Throwable cause) {super(MESSAGE, cause);}
 }

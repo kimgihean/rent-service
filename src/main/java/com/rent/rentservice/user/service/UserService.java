@@ -1,9 +1,9 @@
 package com.rent.rentservice.user.service;
 
 import com.rent.rentservice.user.domain.User;
-import com.rent.rentservice.user.exception.InvalidEmailPattern;
-import com.rent.rentservice.user.exception.OverlapUserEmail;
-import com.rent.rentservice.user.exception.UserNotFound;
+import com.rent.rentservice.user.exception.InvalidEmailPatternException;
+import com.rent.rentservice.user.exception.OverlapUserEmailException;
+import com.rent.rentservice.user.exception.UserNotFoundException;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
@@ -39,12 +39,12 @@ public class UserService {
 
         // 이메일 형식 검사
         if(!CommonUtil.isValidEmail(request.getEmail())) {
-            throw new InvalidEmailPattern();
+            throw new InvalidEmailPatternException();
         }
 
         // 이메일 중복 유효성 검사
         if(userRepository.existsByEmail(request.getEmail())) {
-            throw new OverlapUserEmail();
+            throw new OverlapUserEmailException();
         }
 
         // Request로 부터 User 객체 만들어서 -> 저장
@@ -64,12 +64,12 @@ public class UserService {
 
         // 이메일 형식 검사
         if(!CommonUtil.isValidEmail(request.getEmail())) {
-            throw new InvalidEmailPattern();
+            throw new InvalidEmailPatternException();
         }
 
         // 유저 정보 조회 => 없으면 Error Throw
         User user = userRepository.findByEmailAndPassword(request.getEmail(), aes256.encrypt(request.getPassword()))
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(UserNotFoundException::new);
 
         // 조회된 유저 객체로부터 세션 객체 생성
         UserSessionInfo userSessionInfo = UserSessionInfo.builder()
