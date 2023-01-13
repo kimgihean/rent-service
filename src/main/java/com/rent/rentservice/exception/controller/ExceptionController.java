@@ -28,7 +28,7 @@ public class ExceptionController {
     public ErrorResponse invaildRequestHandler(MethodArgumentNotValidException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
-                .message("잘못된 요청입니다")
+                .message("입력되지 않은 값이 존재합니다")
                 .build();
 
         for(FieldError fieldError : e.getFieldErrors()) {
