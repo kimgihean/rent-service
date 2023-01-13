@@ -3,6 +3,7 @@ package com.rent.rentservice.exception.controller;
 import com.rent.rentservice.exception.response.ErrorResponse;
 import com.rent.rentservice.user.exception.InvalidEmailPattern;
 import com.rent.rentservice.user.exception.OverlapUserEmail;
+import com.rent.rentservice.user.exception.UserNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -55,6 +56,19 @@ public class ExceptionController {
     @ExceptionHandler(InvalidEmailPattern.class)
     @ResponseBody
     public ErrorResponse invaildRequestHandler(InvalidEmailPattern e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
+    }
+
+    // 이메일 + 비밀번호로 조회했는데 해당 유저 없음 -> Throw
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserNotFound.class)
+    @ResponseBody
+    public ErrorResponse invaildRequestHandler(UserNotFound e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message(e.getMessage())
