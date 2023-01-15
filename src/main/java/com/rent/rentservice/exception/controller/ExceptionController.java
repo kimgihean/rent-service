@@ -1,8 +1,9 @@
 package com.rent.rentservice.exception.controller;
 
 import com.rent.rentservice.exception.response.ErrorResponse;
-import com.rent.rentservice.user.exception.InvalidEmailPattern;
-import com.rent.rentservice.user.exception.OverlapUserEmail;
+import com.rent.rentservice.user.exception.InvalidEmailPatternException;
+import com.rent.rentservice.user.exception.OverlapUserEmailException;
+import com.rent.rentservice.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +28,7 @@ public class ExceptionController {
     public ErrorResponse invaildRequestHandler(MethodArgumentNotValidException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
-                .message("잘못된 요청입니다")
+                .message("입력되지 않은 값이 존재합니다")
                 .build();
 
         for(FieldError fieldError : e.getFieldErrors()) {
@@ -39,9 +40,9 @@ public class ExceptionController {
 
     // 회원가입 이메일 중복 -> Throw
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(OverlapUserEmail.class)
+    @ExceptionHandler(OverlapUserEmailException.class)
     @ResponseBody
-    public ErrorResponse invaildRequestHandler(OverlapUserEmail e) {
+    public ErrorResponse invaildRequestHandler(OverlapUserEmailException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message(e.getMessage())
@@ -52,9 +53,22 @@ public class ExceptionController {
 
     // 회원가입 이메일 형식아님 -> Throw
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidEmailPattern.class)
+    @ExceptionHandler(InvalidEmailPatternException.class)
     @ResponseBody
-    public ErrorResponse invaildRequestHandler(InvalidEmailPattern e) {
+    public ErrorResponse invaildRequestHandler(InvalidEmailPatternException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
+    }
+
+    // 이메일 + 비밀번호로 조회했는데 해당 유저 없음 -> Throw
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseBody
+    public ErrorResponse invaildRequestHandler(UserNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message(e.getMessage())
