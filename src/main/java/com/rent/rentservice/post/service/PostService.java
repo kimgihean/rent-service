@@ -26,13 +26,12 @@ public class PostService {
 
     // 글 등록
     public void create(PostCreateForm request,HttpSession session ,SessionUtil sessionUtil) throws Exception{
-        //todo XSS in post create
-        //todo address 에 맞게 게시글 작성
 
         //세션 아웃 검사
         if(!sessionUtil.isValidSession(session)) {
             throw new SessionNotFoundException();
         }
+
         //회원 id 확인 검사
         User loginSessionID = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
                 .get();
