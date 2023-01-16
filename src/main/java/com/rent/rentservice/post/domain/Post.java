@@ -3,7 +3,6 @@ package com.rent.rentservice.post.domain;
 import com.rent.rentservice.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -28,9 +27,11 @@ public class Post {
 
     protected Post() {}
     @Builder
-    public Post(String title,
+    public Post(User userID,
+                String title,
                 int favorite,
                 String text) {
+        this.userID = userID;
         this.title = title;
         this.favorite = favorite;
         this.text = text;

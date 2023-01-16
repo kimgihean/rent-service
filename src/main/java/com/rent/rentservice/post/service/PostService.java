@@ -1,50 +1,62 @@
 package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.exception.SessionIdNotFoundException;
+import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.user.domain.User;
+import com.rent.rentservice.user.repository.UserRepository;
+import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    /**
-     * 글 등록
-     */
-    public void create(PostCreateForm request) throws Exception{
+    // 글 등록
+    public void create(PostCreateForm request,HttpSession session ,SessionUtil sessionUtil) throws Exception{
         //todo XSS in post create
         //todo address 에 맞게 게시글 작성
-        //좋아요 초기 갯수 0 으로 설정
-        int initFavorite = 0;
 
+        //세션 아웃 검사
+        if(!sessionUtil.isValidSession(session)) {
+            throw new SessionNotFoundException();
+        }
+        //회원 id 확인 검사
+        User loginSessionID = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
+                .get();
+        if(!sessionUtil.existSessionID(loginSessionID)) {
+            throw new SessionIdNotFoundException();
+        }
+
+        // request로 부터 post 저장
         Post post = Post.builder()
+                .userID(loginSessionID)
                 .title(request.getTitle())
                 .text(request.getText())
-                .favorite(initFavorite)
+                .favorite(0)
                 .build();
 
         postRepository.save(post);
     }
 
-    /**
-     * 전체 게시글 조회
-     */
+    // 전체 게시글 조회
     public List<Post> findAllPost() {
         return postRepository.findAll();
     }
 
-    /**
-     * 검색(title)에 따른 게시글 조회
-     */
+    // 검색에 따른 게시글 조회
     @Transactional
     public List<Post> findBySearch(String keyword) {
         List<Post> postList = postRepository.findByTitleContaining(keyword);

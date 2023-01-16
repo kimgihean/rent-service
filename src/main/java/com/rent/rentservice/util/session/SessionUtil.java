@@ -1,5 +1,6 @@
 package com.rent.rentservice.util.session;
 
+import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.request.UserSessionInfo;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -16,6 +17,22 @@ public class SessionUtil {
 
     // 인스턴스화 방지
     private SessionUtil() {
+    }
+
+    // 세션 아웃 확인
+    public static boolean isValidSession(HttpSession session) {
+        if(session == null) {
+            return false;
+        }
+        return true;
+    }
+
+    // 세션 ID 확인 검사
+    public static boolean existSessionID(User sessionId) {
+        if(sessionId == null) {
+            return false;
+        }
+        return true;
     }
 
     public static String getLoginMemberNickname(HttpSession session) {

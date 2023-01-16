@@ -4,6 +4,7 @@ import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.service.PostService;
+import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RestController // 이 annotation을 사용하면 메서드마다 ResponseBody를 따로 선언해줄 필요 없음.
+@RestController
 @RequiredArgsConstructor
 public class PostController {
 
@@ -33,21 +35,17 @@ public class PostController {
         return posts;
     }
 
-    /**
-     * 검색에 따른 전체 조회
-     */
+    // 검색에 따른 전체 조회
     @GetMapping("/posts/search")
     public List<Post> searchList(String keyword) {
         List<Post> searchPosts = postRepository.findByTitleContaining(keyword);
         return searchPosts;
     }
 
-    /**
-     * POST CREATE //post method
-     */
+    // 게시글 CREATE
     @PostMapping("/posts/create")
-    public void create(@RequestBody @Valid PostCreateForm request) throws Exception{
-        postService.create(request);
+    public void create(@RequestBody @Valid PostCreateForm request,HttpSession session ,SessionUtil sessionUtil) throws Exception{
+        postService.create(request, session, sessionUtil);
     }
 
 
