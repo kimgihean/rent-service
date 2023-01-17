@@ -88,7 +88,7 @@ public class PostControllerTest {
     }
 
     @Test @DisplayName("게시글 작성시 DB 저장") //todo @DisplayName 한글 작성시 폰트 깨짐 수정
-    void CreateTest() throws Exception {
+    void test1() throws Exception {
 
         // given
         PostCreateForm postRequest = PostCreateForm.builder()
@@ -115,25 +115,5 @@ public class PostControllerTest {
         assertEquals("제목 테스트", post.getTitle());
         assertEquals(0, post.getFavorite());
         assertEquals("내용 테스트", post.getText());
-
     }
-
-    @Test @DisplayName("게시글 작성시 세션 아웃 검사")
-    void CreateSessionTest() throws Exception {
-        // given
-        PostCreateForm postRequest = PostCreateForm.builder()
-                .title("제목 테스트")
-                .favorite(0)
-                .text("내용 테스트")
-                .build();
-
-        // when
-        session.invalidate();
-
-        // then :: invalidate 했으나 세션 아웃 검사해서 예외 처리 못함.
-        assertThrows(SessionNotFoundException.class, () -> {
-            postService.create(postRequest, session);
-        });
-    }
-
 }

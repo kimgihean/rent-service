@@ -22,9 +22,9 @@ public class SessionUtil {
     // 세션 아웃 확인
     public static boolean checkValidSession(HttpSession session) {
         if(session == null) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static String getLoginMemberNickname(HttpSession session) {
