@@ -13,6 +13,7 @@ import com.rent.rentservice.util.encryption.AES256;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,11 +61,12 @@ public class PostControllerTest {
     @Autowired
     AES256 aes256;
 
-    MockHttpSession session = new MockHttpSession();
+    MockHttpSession session;
 
     @BeforeEach
     void clean() throws Exception {
         // 임시 회원 정보 저장하고 로그인 시키기
+        session = new MockHttpSession();
         JoinForm joinRequest = JoinForm.builder()
                 .name("홍길동")
                 .nickName("닉네임")
@@ -120,10 +122,4 @@ public class PostControllerTest {
 
     }
 
-    @Test @DisplayName("게시글 작성시 회원 ID 확인 검사")
-    void CreateSessionIdTest() {
-
-    }
-
-    // @Test @DisplayName("")
 }

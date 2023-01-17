@@ -38,8 +38,6 @@ public class PostService {
         User loginSessionID = userRepository.findById(SessionUtil.getLoginMemberIdn(session))
                 .orElseThrow(UserNotFoundException::new);
 
-        // request로 부터 post 저장
-
         Post post = Post.builder()
                 .userID(loginSessionID)
                 .title(request.getTitle())
