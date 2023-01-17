@@ -7,6 +7,7 @@ import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.user.domain.User;
+import com.rent.rentservice.user.exception.UserNotFoundException;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +34,10 @@ public class PostService {
             throw new SessionNotFoundException();
         }
 
-        //회원 id 확인 검사
+        //회원 정보 조회 검사
         User loginSessionID = userRepository.findById(SessionUtil.getLoginMemberIdn(session))
-                .get();
-        if(!SessionUtil.existSessionID(loginSessionID)) {
-            throw new SessionIdNotFoundException();
-        }
+                .orElseThrow(UserNotFoundException::new);
+
         // request로 부터 post 저장
 
         Post post = Post.builder()
