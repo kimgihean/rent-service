@@ -1,5 +1,6 @@
 package com.rent.rentservice.post.service;
 
+import com.mysql.cj.Session;
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.exception.SessionIdNotFoundException;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
@@ -25,21 +26,21 @@ public class PostService {
     private final UserRepository userRepository;
 
     // 글 등록
-    public void create(PostCreateForm request,HttpSession session ,SessionUtil sessionUtil) throws Exception{
+    public void create(PostCreateForm request,HttpSession session) throws Exception{
 
         //세션 아웃 검사
-        if(!sessionUtil.isValidSession(session)) {
+        if(!SessionUtil.isValidSession(session)) {
             throw new SessionNotFoundException();
         }
 
         //회원 id 확인 검사
-        User loginSessionID = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
+        User loginSessionID = userRepository.findById(SessionUtil.getLoginMemberIdn(session))
                 .get();
-        if(!sessionUtil.existSessionID(loginSessionID)) {
+        if(!SessionUtil.existSessionID(loginSessionID)) {
             throw new SessionIdNotFoundException();
         }
-
         // request로 부터 post 저장
+
         Post post = Post.builder()
                 .userID(loginSessionID)
                 .title(request.getTitle())

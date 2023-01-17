@@ -44,8 +44,8 @@ public class PostController {
 
     // 게시글 CREATE
     @PostMapping("/posts/create")
-    public void create(@RequestBody @Valid PostCreateForm request,HttpSession session ,SessionUtil sessionUtil) throws Exception{
-        postService.create(request, session, sessionUtil);
+    public void create(@RequestBody @Valid PostCreateForm request,HttpSession session) throws Exception{
+        postService.create(request, session);
     }
 
 
