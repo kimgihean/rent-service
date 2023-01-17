@@ -20,16 +20,8 @@ public class SessionUtil {
     }
 
     // 세션 아웃 확인
-    public static boolean isValidSession(HttpSession session) {
+    public static boolean checkValidSession(HttpSession session) {
         if(session == null) {
-            return false;
-        }
-        return true;
-    }
-
-    // 세션 ID 확인 검사
-    public static boolean existSessionID(User sessionId) {
-        if(sessionId == null) {
             return false;
         }
         return true;

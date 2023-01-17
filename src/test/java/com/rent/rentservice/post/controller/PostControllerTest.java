@@ -2,6 +2,7 @@ package com.rent.rentservice.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.service.PostService;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,8 +119,21 @@ public class PostControllerTest {
     }
 
     @Test @DisplayName("게시글 작성시 세션 아웃 검사")
-    void CreateSessionTest() {
+    void CreateSessionTest() throws Exception {
+        // given
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목 테스트")
+                .favorite(0)
+                .text("내용 테스트")
+                .build();
 
+        // when
+        session.invalidate();
+
+        // then :: invalidate 했으나 세션 아웃 검사해서 예외 처리 못함.
+        assertThrows(SessionNotFoundException.class, () -> {
+            postService.create(postRequest, session);
+        });
     }
 
 }

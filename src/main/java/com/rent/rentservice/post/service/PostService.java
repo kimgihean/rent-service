@@ -30,7 +30,7 @@ public class PostService {
     public void create(PostCreateForm request,HttpSession session) throws Exception{
 
         //세션 아웃 검사
-        if(!SessionUtil.isValidSession(session)) {
+        if(SessionUtil.checkValidSession(session)) {
             throw new SessionNotFoundException();
         }
 
