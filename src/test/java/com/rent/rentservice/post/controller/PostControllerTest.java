@@ -101,7 +101,7 @@ public class PostControllerTest {
         String postJson = objectMapper.writeValueAsString(postRequest);
 
         // when
-        mockMvc.perform(post("/posts/create")
+        mockMvc.perform(post("/Home/item-list/post")
                         .session(session)
                         .contentType(MediaType.APPLICATION_JSON)  // 객체를 변환해줄 타입
                         .content(postJson))             // 위 타입으로 저장할 객체

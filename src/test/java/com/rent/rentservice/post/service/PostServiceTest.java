@@ -91,7 +91,7 @@ public class PostServiceTest {
         // when
         session.invalidate();
 
-        // then :: invalidate 했으나 세션 아웃 검사해서 예외 처리 못함.
+        // todo 오류 then :: invalidate 했으나 세션 아웃 검사해서 예외 처리 못함.
         assertThrows(SessionNotFoundException.class, () -> {
             postService.create(postRequest, session);
         });
