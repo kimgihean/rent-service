@@ -87,7 +87,7 @@ public class PostControllerTest {
         postRepository.deleteAll();
     }
 
-    @Test @DisplayName("게시글 작성시 DB 저장") //todo @DisplayName 한글 작성시 폰트 깨짐 수정
+    @Test @DisplayName("아이템 생성시 DB 저장") //todo @DisplayName 한글 작성시 폰트 깨짐 수정
     void test1() throws Exception {
 
         // given
@@ -115,5 +115,32 @@ public class PostControllerTest {
         assertEquals("제목 테스트", post.getTitle());
         assertEquals(0, post.getFavorite());
         assertEquals("내용 테스트", post.getText());
+    }
+
+    @Test @DisplayName("전체 아이템 조회")
+    void test2() {
+        // given
+
+        // when
+
+        // then
+    }
+
+    @Test @DisplayName("검색으로 아이템 조회")
+    void test3() {
+        // given
+
+        // when
+
+        // then
+    }
+
+    @Test @DisplayName("아이템 세부 사항")
+    void test4() {
+        // given
+
+        // when
+
+        // then
     }
 }

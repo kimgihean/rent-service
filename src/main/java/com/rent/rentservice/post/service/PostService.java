@@ -48,11 +48,6 @@ public class PostService {
         postRepository.save(post);
     }
 
-    // 전체 게시글 조회
-    public List<Post> findAllPost() {
-        return postRepository.findAll();
-    }
-
     // 검색에 따른 게시글 조회
     @Transactional
     public List<Post> findBySearch(String keyword) {
@@ -79,8 +74,6 @@ public class PostService {
                 .favorite(post.getFavorite())
                 .text(post.getText())
                 .build();
-
-
     }
 
     /**

@@ -34,8 +34,8 @@ public class PostController {
 
     // 검색에 따른 전체 조회
     @GetMapping(value = "/Home/item-list?title={keyword}")
-    public List<Post> searchList(@RequestParam String keyword) {
-        List<Post> searchPosts = postRepository.findByTitleContaining(keyword);
+    public List<Post> searchList(@RequestParam @PathVariable String keyword) {
+        List<Post> searchPosts = postService.findBySearch(keyword);
         return searchPosts;
     }
 

@@ -34,6 +34,7 @@ public class PostServiceTest {
     PostRepository postRepository;
 
     MockHttpSession session;
+
     @BeforeEach
     void clean() throws Exception {
         // 임시 회원 정보 저장하고 로그인 시키기
@@ -57,8 +58,7 @@ public class PostServiceTest {
         postRepository.deleteAll();
     }
 
-    @Test
-    @DisplayName("게시글 작성")
+    @Test @DisplayName("아이템 작성")
     void test1() throws Exception {
         //given
         PostCreateForm postRequest = PostCreateForm.builder()
@@ -78,8 +78,7 @@ public class PostServiceTest {
         assertEquals("내용 테스트", post.getText());
     }
 
-    @Test
-    @DisplayName("게시글 작성시 세션 아웃 검사")
+    @Test @DisplayName("아이템 생성시 세션 아웃 검사")
     void test2() throws Exception {
         // given
         PostCreateForm postRequest = PostCreateForm.builder()
@@ -96,4 +95,5 @@ public class PostServiceTest {
             postService.create(postRequest, session);
         });
     }
+
 }
