@@ -1,9 +1,7 @@
 package com.rent.rentservice.exception.controller;
 
 import com.rent.rentservice.exception.response.ErrorResponse;
-import com.rent.rentservice.user.exception.InvalidEmailPatternException;
-import com.rent.rentservice.user.exception.OverlapUserEmailException;
-import com.rent.rentservice.user.exception.UserNotFoundException;
+import com.rent.rentservice.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -71,6 +69,32 @@ public class ExceptionController {
     public ErrorResponse invaildRequestHandler(UserNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("430")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
+    }
+
+    // 비밀번호 변경 => 현재 비밀번호 불일치
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CurrentPasswordMismatchException.class)
+    @ResponseBody
+    public ErrorResponse invaildRequestHandler(CurrentPasswordMismatchException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("440")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
+    }
+
+    // 비밀번호 변경 => 새로운 비밀번호 != 새로운 비밀번호 재입력
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NewPasswordMismatchException.class)
+    @ResponseBody
+    public ErrorResponse invaildRequestHandler(NewPasswordMismatchException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("450")
                 .message(e.getMessage())
                 .build();
 

@@ -1,5 +1,6 @@
 package com.rent.rentservice.user.controller;
 
+import com.rent.rentservice.user.request.ChangePwForm;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
@@ -39,6 +40,11 @@ public class UserController {
     @PostMapping(value = "/api/v1/logout")
     public void logout(HttpSession session) {
         userService.logout(session);
+    }
+
+    @PostMapping(value = "/api/v1/changePw")
+    public void changePw(@RequestBody @Valid ChangePwForm request, HttpSession session) throws Exception {
+        userService.changePw(request, session);
     }
 
     @GetMapping("/sessionExistCheck")

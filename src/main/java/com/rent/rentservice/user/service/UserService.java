@@ -1,10 +1,10 @@
 package com.rent.rentservice.user.service;
 
 import com.rent.rentservice.user.domain.User;
-import com.rent.rentservice.user.exception.InvalidEmailPatternException;
-import com.rent.rentservice.user.exception.OverlapUserEmailException;
-import com.rent.rentservice.user.exception.UserNotFoundException;
+import com.rent.rentservice.user.domain.UserEditor;
+import com.rent.rentservice.user.exception.*;
 import com.rent.rentservice.user.repository.UserRepository;
+import com.rent.rentservice.user.request.ChangePwForm;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.request.UserSessionInfo;
@@ -56,6 +56,8 @@ public class UserService {
                         .password(aes256.encrypt(request.getPassword()))
                         .address(request.getAddress())
                         .build();
+
+        // 생성된 User 객체 저장
         userRepository.save(user);
     }
 
@@ -84,6 +86,39 @@ public class UserService {
 
     // 로그아웃
     public void logout(HttpSession session) {
+        // 세션 무효화
         session.invalidate();
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePw(ChangePwForm request, HttpSession session) throws Exception {
+
+        //회원 정보 조회
+        User user = userRepository.findById(SessionUtil.getLoginMemberIdn(session))
+                .orElseThrow(UserNotFoundException::new);
+
+        // 세션으로부터 조회된 유저의 비밀번호가 입력한 현재 비밀번호와 일치하지 않으면
+        if(!request.getCurPassword().equals(aes256.decrypt(user.getPassword()))) {
+            throw new CurrentPasswordMismatchException();
+        }
+
+        // 새로운 비밀번호가 재입력 비밀번호와 일치하지 않으면
+        if(!request.getNewPassword().equals(request.getNewPasswordCheck())) {
+            throw new NewPasswordMismatchException();
+        }
+
+        // UserEditor 객체 생성
+        UserEditor userEditor = UserEditor.builder()
+                        .name(user.getName())
+                        .nickName(user.getNickName())
+                        .email(user.getEmail())
+                        .phoneNumber(user.getPhoneNumber())
+                        .password(aes256.encrypt(request.getNewPassword()))
+                        .address(user.getAddress())
+                        .build();
+
+        // UserEditor => 새로운 유저 객체 생성 => UPDATE
+        user.updateUser(userEditor);
     }
 }

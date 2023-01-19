@@ -49,4 +49,13 @@ public class User {
         this.email = email;
         this.address = address;
     }
+
+    public void updateUser(UserEditor userEditor) {
+        this.name = userEditor.getName();
+        this.nickName = userEditor.getNickName();
+        this.email = userEditor.getEmail();
+        this.phoneNumber = userEditor.getPhoneNumber();
+        this.password = userEditor.getPassword();
+        this.address = userEditor.getAddress();
+    }
 }
