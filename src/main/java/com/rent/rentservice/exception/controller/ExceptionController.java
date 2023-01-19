@@ -44,7 +44,7 @@ public class ExceptionController {
     @ResponseBody
     public ErrorResponse invaildRequestHandler(OverlapUserEmailException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("400")
+                .code("410")
                 .message(e.getMessage())
                 .build();
 
@@ -57,7 +57,7 @@ public class ExceptionController {
     @ResponseBody
     public ErrorResponse invaildRequestHandler(InvalidEmailPatternException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("400")
+                .code("420")
                 .message(e.getMessage())
                 .build();
 
@@ -70,7 +70,7 @@ public class ExceptionController {
     @ResponseBody
     public ErrorResponse invaildRequestHandler(UserNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("400")
+                .code("430")
                 .message(e.getMessage())
                 .build();
 

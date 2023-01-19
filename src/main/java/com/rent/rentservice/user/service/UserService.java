@@ -81,4 +81,9 @@ public class UserService {
         // 세션 정보를 바탕으로 세션 생성
         SessionUtil.setLoginInfo(session, userSessionInfo);
     }
+
+    // 로그아웃
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
 }

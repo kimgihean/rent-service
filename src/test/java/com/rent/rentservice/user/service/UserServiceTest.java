@@ -7,6 +7,7 @@ import com.rent.rentservice.user.exception.UserNotFoundException;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
+import com.rent.rentservice.user.request.UserSessionInfo;
 import com.rent.rentservice.util.encryption.AES256;
 import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -179,5 +180,27 @@ class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> {
             userService.login(request, session);
         });
+    }
+
+    @Test
+    @DisplayName("로그아웃 - 세션 삭제")
+    void test7() throws Exception {
+
+        //given
+        UserSessionInfo userSessionInfo = UserSessionInfo.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickName("홍길동")
+                .build();
+
+        MockHttpSession session = new MockHttpSession();
+
+        SessionUtil.setLoginInfo(session, userSessionInfo);
+
+        //when
+        userService.logout(session);
+
+        //expected
+        assertTrue(session.isInvalid());
     }
 }

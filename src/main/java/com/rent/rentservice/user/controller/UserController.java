@@ -5,6 +5,7 @@ import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
 import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +34,15 @@ public class UserController {
     @PostMapping(value = "/api/v1/login")
     public void login(@RequestBody @Valid LoginForm request, HttpSession session) throws Exception {
         userService.login(request, session);
+    }
+
+    @PostMapping(value = "/api/v1/logout")
+    public void logout(HttpSession session) {
+        userService.logout(session);
+    }
+
+    @GetMapping("/sessionExistCheck")
+    public void sessionExistCheck(HttpSession session) {
+        System.out.println(SessionUtil.getLoginMemberIdn(session));
     }
 }
