@@ -24,11 +24,8 @@ public class PostController {
     private final PostRepository postRepository;
     private final PostService postService;
 
-    /**
-     * POST 전체 조회하기 //get method
-     * //todo return data type 학습
-     */
-    @GetMapping("/posts")
+    // 전체 조회
+    @GetMapping(value = "/Home/item-list")
     public List<Post> list() {
         List<Post> posts = postRepository.findAll();
 
@@ -36,17 +33,24 @@ public class PostController {
     }
 
     // 검색에 따른 전체 조회
-    @GetMapping("/posts/search")
-    public List<Post> searchList(String keyword) {
+    @GetMapping(value = "/Home/item-list?title={keyword}")
+    public List<Post> searchList(@RequestParam String keyword) {
         List<Post> searchPosts = postRepository.findByTitleContaining(keyword);
         return searchPosts;
     }
 
     // 게시글 CREATE
-    @PostMapping("/posts/create")
+    @PostMapping(value = "/Home/item-list/post")
     public void create(@RequestBody @Valid PostCreateForm request,HttpSession session) throws Exception{
         postService.create(request, session);
     }
 
+    // 아이템 상세 목록 조회
+    @GetMapping(value = "/Home/item-list/item-id")
+    public void item_detail() {
+
+    }
+
+    //
 
 }
