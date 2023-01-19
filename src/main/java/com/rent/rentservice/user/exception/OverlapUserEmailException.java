@@ -7,7 +7,7 @@ package com.rent.rentservice.user.exception;
  */
 
 public class OverlapUserEmailException extends RuntimeException {
-    private static final String MESSAGE = "중복된 이메일이 존재합니다";
+    private static final String MESSAGE = "이미 가입된 이메일입니다";
 
     public OverlapUserEmailException() {super(MESSAGE);}
 

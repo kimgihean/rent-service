@@ -5,6 +5,7 @@ import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
+import com.rent.rentservice.user.request.UserSessionInfo;
 import com.rent.rentservice.util.encryption.AES256;
 import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -179,6 +180,30 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("입력되지 않은 값이 존재합니다"))
                 .andExpect(jsonPath("$.vaildation.email").value("이메일을 입력해주세요"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그아웃 테스트")
+    void test5() throws Exception {
+
+        //given
+        UserSessionInfo userSessionInfo = UserSessionInfo.builder()
+                .id(1L)
+                .email("test@test.com")
+                .nickName("홍길동")
+                .build();
+
+        MockHttpSession session = new MockHttpSession();
+
+        SessionUtil.setLoginInfo(session, userSessionInfo);
+
+        //expected
+        mockMvc.perform(post("/api/v1/logout")
+                        .contentType(APPLICATION_JSON)
+                        .session(session)
+                )
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }
