@@ -30,7 +30,7 @@ public class PostController {
     // 검색에 따른 전체 조회
     @GetMapping(value = "/Home/item-list?")
     public List<Post> searchList(@RequestParam SearchForm request) {
-        List<Post> searchPosts = postRepository.findBySearchUsingQueryDsl(request);
+        List<Post> searchPosts = postService.findBySearch(request);
         return searchPosts;
     }
 
@@ -45,7 +45,4 @@ public class PostController {
     public void item_detail() {
 
     }
-
-    //
-
 }

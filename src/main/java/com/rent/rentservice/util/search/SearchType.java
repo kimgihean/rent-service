@@ -1,6 +1,7 @@
 package com.rent.rentservice.util.search;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum SearchType {
@@ -25,6 +26,7 @@ public enum SearchType {
         return null;
     }
 
+    @JsonValue
     private String getValue() {
         return value;
     }

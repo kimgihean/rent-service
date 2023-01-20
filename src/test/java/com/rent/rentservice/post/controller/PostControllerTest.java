@@ -2,29 +2,33 @@ package com.rent.rentservice.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rent.rentservice.post.domain.Post;
-import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.post.service.PostService;
+import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
 import com.rent.rentservice.util.encryption.AES256;
+import com.rent.rentservice.util.search.SearchType;
+import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -117,16 +121,35 @@ public class PostControllerTest {
         assertEquals("내용 테스트", post.getText());
     }
 
-    @Test @DisplayName("전체 아이템 조회")
-    void test2() {
+    @Test @DisplayName("검색으로 아이템 조회")
+    void test2() throws Exception {
         // given
+        PostCreateForm postRequest1 = PostCreateForm.builder()
+                .title("한글로 검색합니다")
+                .favorite(0)
+                .text("가나다라마바사")
+                .build();
+        postService.create(postRequest1, session);
+
+        PostCreateForm postRequest2 = PostCreateForm.builder()
+                .title("영어로 검색합니다")
+                .favorite(0)
+                .text("ABCDEFG")
+                .build();
+        postService.create(postRequest2, session);
 
         // when
+        List<Post> SearchedTitleList = postService.findBySearch(new SearchForm("한글", SearchType.title));
+        List<Post> SearchedWriterList = postService.findBySearch(new SearchForm("홍길동", SearchType.writer));
+        List<Post> SearchedTitleContextList = postService.findBySearch(new SearchForm("ABC", SearchType.titleAndContext));
 
-        // then
+        // then todo List가 비어있는 문제 해결
+        assertThat(SearchedTitleList).extracting("title").containsExactly("한글로 검색합니다");
+        assertThat(SearchedWriterList).extracting("title").containsExactly("한글로 검색합니다", "영어로 검색합니다");
+        assertThat(SearchedTitleContextList).extracting("title").containsExactly("영어로 검색합니다");
     }
 
-    @Test @DisplayName("검색으로 아이템 조회")
+    @Test @DisplayName("전체 아이템 조회")
     void test3() {
         // given
 

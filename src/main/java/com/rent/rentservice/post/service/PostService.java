@@ -49,8 +49,8 @@ public class PostService {
     // 검색에 따른 게시글 조회
     @Transactional
     public List<Post> findBySearch(SearchForm condition) {
-
-        return null;
+        List<Post> searchPostList = postRepository.findBySearchUsingQueryDsl(condition);
+        return searchPostList;
     }
 
     /**
