@@ -8,7 +8,6 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-//todo JPA Auditing 추상 클래스 추후에 생성
 //todo category
 @Data
 public class PostCreateForm {

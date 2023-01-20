@@ -1,14 +1,13 @@
 package com.rent.rentservice.post.service;
 
-import com.mysql.cj.Session;
 import com.rent.rentservice.post.domain.Post;
-import com.rent.rentservice.post.exception.SessionIdNotFoundException;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.exception.UserNotFoundException;
 import com.rent.rentservice.user.repository.UserRepository;
+import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,17 +48,9 @@ public class PostService {
 
     // 검색에 따른 게시글 조회
     @Transactional
-    public List<Post> findBySearch(String keyword) {
-        List<Post> postList = postRepository.findByTitleContaining(keyword);
-        List<Post> postListBySearch = new ArrayList<>();
+    public List<Post> findBySearch(SearchForm condition) {
 
-        if(postList.isEmpty()) return postListBySearch; //todo exception 처리
-
-        for(Post post : postList) {
-            postListBySearch.add(this.convertEntityInPost(post));
-        }
-
-        return postListBySearch;
+        return null;
     }
 
     /**
@@ -93,7 +83,4 @@ public class PostService {
 
         return postListByID;
     }
-    /**
-     * address에 따른 게시글 조회
-     */
 }

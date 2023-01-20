@@ -3,19 +3,14 @@ package com.rent.rentservice.post.controller;
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.post.service.PostService;
-import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,9 +28,9 @@ public class PostController {
     }
 
     // 검색에 따른 전체 조회
-    @GetMapping(value = "/Home/item-list?title={keyword}")
-    public List<Post> searchList(@RequestParam @PathVariable String keyword) {
-        List<Post> searchPosts = postService.findBySearch(keyword);
+    @GetMapping(value = "/Home/item-list?")
+    public List<Post> searchList(@RequestParam SearchForm request) {
+        List<Post> searchPosts = postRepository.findBySearchUsingQueryDsl(request);
         return searchPosts;
     }
 

@@ -87,7 +87,7 @@ public class PostControllerTest {
         postRepository.deleteAll();
     }
 
-    @Test @DisplayName("아이템 생성시 DB 저장") //todo @DisplayName 한글 작성시 폰트 깨짐 수정
+    @Test @DisplayName("아이템 생성시 DB 저장")
     void test1() throws Exception {
 
         // given
