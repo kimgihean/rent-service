@@ -75,7 +75,7 @@ public class ExceptionController {
         return errorResponse;
     }
 
-    // 비밀번호 변경 => 현재 비밀번호 불일치
+    // 비밀번호 변경 => 현재 비밀번호 불일치 -> Throw
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(CurrentPasswordMismatchException.class)
     @ResponseBody
@@ -88,7 +88,7 @@ public class ExceptionController {
         return errorResponse;
     }
 
-    // 비밀번호 변경 => 새로운 비밀번호 != 새로운 비밀번호 재입력
+    // 비밀번호 변경 => 새로운 비밀번호 != 새로운 비밀번호 재입력 -> Throw
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NewPasswordMismatchException.class)
     @ResponseBody
