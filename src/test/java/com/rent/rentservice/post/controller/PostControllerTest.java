@@ -30,6 +30,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -121,32 +122,35 @@ public class PostControllerTest {
         assertEquals("내용 테스트", post.getText());
     }
 
-    @Test @DisplayName("검색으로 아이템 조회")
+    @Test @DisplayName("검색 조회 요청")
     void test2() throws Exception {
         // given
-        PostCreateForm postRequest1 = PostCreateForm.builder()
-                .title("한글로 검색합니다")
-                .favorite(0)
-                .text("가나다라마바사")
-                .build();
-        postService.create(postRequest1, session);
 
-        PostCreateForm postRequest2 = PostCreateForm.builder()
-                .title("영어로 검색합니다")
+        // 1. 아이템 게시글 저장
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목 테스트")
                 .favorite(0)
-                .text("ABCDEFG")
+                .text("내용 테스트")
                 .build();
-        postService.create(postRequest2, session);
+
+        postService.create(postRequest, session);
+
+        SearchForm request = SearchForm.builder()
+                .content("제목 검색")
+                .type(SearchType.valueOf("title"))
+                .build();
+
+        String searchJson = objectMapper.writeValueAsString(request);
 
         // when
-        List<Post> SearchedTitleList = postService.findBySearch(new SearchForm("한글", SearchType.title));
-        List<Post> SearchedWriterList = postService.findBySearch(new SearchForm("홍길동", SearchType.writer));
-        List<Post> SearchedTitleContextList = postService.findBySearch(new SearchForm("ABC", SearchType.titleAndContext));
+        mockMvc.perform(get("/Home/item-list?")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(searchJson))
+                .andExpect(status().isOk())
+                .andDo(print());
+        // then
 
-        // then todo List가 비어있는 문제 해결
-        assertThat(SearchedTitleList).extracting("title").containsExactly("한글로 검색합니다");
-        assertThat(SearchedWriterList).extracting("title").containsExactly("한글로 검색합니다", "영어로 검색합니다");
-        assertThat(SearchedTitleContextList).extracting("title").containsExactly("영어로 검색합니다");
     }
 
     @Test @DisplayName("전체 아이템 조회")

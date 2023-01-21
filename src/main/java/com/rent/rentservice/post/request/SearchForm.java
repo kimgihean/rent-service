@@ -1,6 +1,7 @@
 package com.rent.rentservice.post.request;
 
 import com.rent.rentservice.util.search.SearchType;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,7 @@ public class SearchForm {
     String content;
     SearchType type; // title, writer, title and context
 
+    @Builder
     public SearchForm(String content, SearchType type) {
         this.content = content;
         this.type = type;

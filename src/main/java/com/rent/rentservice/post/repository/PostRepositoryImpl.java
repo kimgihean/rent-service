@@ -25,7 +25,7 @@ import static com.rent.rentservice.post.domain.QPost.post;
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom{
-
+    // todo : 검색 시 로그인 한 사용자의 주소에 맞는 아이템 조회되도록 수정
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override

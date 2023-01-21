@@ -7,7 +7,7 @@ import lombok.Getter;
 public enum SearchType {
     title("title"),
     writer("writer"),
-    titleAndContext("title and Context");
+    titleAndContext("context");
 
     @Getter
     private final String value;
