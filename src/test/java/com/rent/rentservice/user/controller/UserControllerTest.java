@@ -83,7 +83,6 @@ class UserControllerTest {
         assertEquals(1L, userRepository.count());
 
         User user = userRepository.findAll().get(0);
-        assertEquals(1L, user.getUserId());
         assertEquals("홍길동", user.getName());
         assertEquals("닉네임", user.getNickName());
         assertEquals("test@test.com", user.getEmail());

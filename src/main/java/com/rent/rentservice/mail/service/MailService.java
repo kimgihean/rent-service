@@ -5,7 +5,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.rent.rentservice.mail.domain.AuthNum;
+import com.rent.rentservice.mail.exception.InvaildAuthCheckException;
 import com.rent.rentservice.mail.repository.MailRepository;
+import com.rent.rentservice.mail.request.AuthCheckForm;
 import com.rent.rentservice.mail.request.SendMailForm;
 import com.rent.rentservice.user.exception.InvalidEmailPatternException;
 import com.rent.rentservice.util.common.CommonUtil;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.nio.channels.Pipe;
 
 /**
  * @description Mail 전송 및 인증 서비스 레이어
@@ -28,6 +32,7 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
 
+    // 메세지 생성
     private MimeMessage sendAuthMail(String toEmail) throws Exception {
 
         final String authNumber = CommonUtil.createAuthNumber();
@@ -69,6 +74,7 @@ public class MailService {
         return message;
     }
 
+    // 메일 전송
     public void sendMessage(SendMailForm request) throws Exception {
 
         // 이메일 형식 체크
@@ -81,5 +87,19 @@ public class MailService {
 
         // 메일 전송
         javaMailSender.send(message);
+    }
+
+
+    // 인증번호 체크
+    public void authNumCheck(AuthCheckForm request) {
+
+        // 이메일 형식 체크
+        if(!CommonUtil.isValidEmail(request.getEmail())) {
+            throw new InvalidEmailPatternException();
+        }
+
+        if(!mailRepository.existsByEmailAndAuthNum(request.getEmail(), request.getAuthNum())) {
+            throw new InvaildAuthCheckException();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.rent.rentservice.mail.controller;
 
+import com.rent.rentservice.mail.request.AuthCheckForm;
 import com.rent.rentservice.mail.request.SendMailForm;
 import com.rent.rentservice.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,10 @@ public class MailController {
     @PostMapping("/api/v1/sendAuthMail")
     public void sendAuthMail(@RequestBody @Valid SendMailForm request) throws Exception {
         mailService.sendMessage(request);
+    }
+
+    @PostMapping("/api/v1/mailAuthCheck")
+    public void authCheck(@RequestBody @Valid AuthCheckForm request) {
+        mailService.authNumCheck(request);
     }
 }
