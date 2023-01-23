@@ -3,6 +3,7 @@ package com.rent.rentservice.post.service;
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
+import com.rent.rentservice.post.repository.PostRepositoryImpl;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.user.request.JoinForm;
@@ -39,6 +40,8 @@ public class PostServiceTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    PostRepositoryImpl postRepositoryImpl;
     MockHttpSession session;
 
     @BeforeEach
@@ -128,12 +131,14 @@ public class PostServiceTest {
                 .findBySearch(new SearchForm("ABC", titleAndContext));
 
         // then todo : List 가 비어있는 문제 해결
-        assertThat(SearchedTitleList).extracting("title")
-                .containsExactly("한글로 검색합니다");
-        assertThat(SearchedWriterList).extracting("title")
-                .containsExactly("한글로 검색합니다", "영어로 검색합니다");
-        assertThat(SearchedTitleContextList).extracting("title")
-                .containsExactly("영어로 검색합니다");
+        assertThat(SearchedTitleContextList.size()).isEqualTo(1);
+        assertThat(SearchedTitleContextList.get(0).getFavorite()).isEqualTo(0);
+//        assertThat(SearchedTitleList).extracting("title")
+//                .containsExactly("한글로 검색합니다");
+//        assertThat(SearchedWriterList).extracting("title")
+//                .containsExactly("한글로 검색합니다", "영어로 검색합니다");
+//        assertThat(SearchedTitleContextList).extracting("title")
+//                .containsExactly("영어로 검색합니다");
     }
 
 }

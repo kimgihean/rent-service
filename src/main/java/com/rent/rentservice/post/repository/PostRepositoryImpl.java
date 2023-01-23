@@ -8,8 +8,11 @@ import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.util.search.SearchType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -23,10 +26,13 @@ import static com.rent.rentservice.post.domain.QPost.post;
  */
 
 @Repository
-@RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom{
     // todo : 검색 시 로그인 한 사용자의 주소에 맞는 아이템 조회되도록 수정
     private final JPAQueryFactory jpaQueryFactory;
+
+    public PostRepositoryImpl(EntityManager em) {
+        this.jpaQueryFactory = new JPAQueryFactory(em);
+    }
 
     @Override
     public List<Post> findBySearchUsingQueryDsl(SearchForm condition) {

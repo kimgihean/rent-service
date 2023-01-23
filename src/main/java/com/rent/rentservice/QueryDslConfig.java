@@ -1,8 +1,12 @@
 package com.rent.rentservice;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.rent.rentservice.post.repository.PostRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.rent.rentservice.post.domain.Post;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
