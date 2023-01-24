@@ -1,6 +1,7 @@
 package com.rent.rentservice.exception.controller;
 
 import com.rent.rentservice.exception.response.ErrorResponse;
+import com.rent.rentservice.mail.exception.InvaildAuthCheckException;
 import com.rent.rentservice.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -95,6 +96,19 @@ public class ExceptionController {
     public ErrorResponse invaildRequestHandler(NewPasswordMismatchException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("450")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
+    }
+
+    // 인증번호 체크 실패
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvaildAuthCheckException.class)
+    @ResponseBody
+    public ErrorResponse invaildRequestHandler(InvaildAuthCheckException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("460")
                 .message(e.getMessage())
                 .build();
 
