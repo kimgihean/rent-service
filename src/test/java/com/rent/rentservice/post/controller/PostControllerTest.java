@@ -1,7 +1,9 @@
 package com.rent.rentservice.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.request.SearchForm;
@@ -24,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
@@ -67,6 +70,10 @@ public class PostControllerTest {
     @Autowired
     AES256 aes256;
 
+    @Autowired
+    EntityManager em;
+
+    SessionUtil sessionUtil;
     MockHttpSession session;
 
     @BeforeEach
@@ -89,6 +96,7 @@ public class PostControllerTest {
                 .build();
         userService.login(loginRequest, session);
 
+        // 포스트 전체 삭제
         postRepository.deleteAll();
     }
 
@@ -142,24 +150,44 @@ public class PostControllerTest {
 
         String searchJson = objectMapper.writeValueAsString(request);
 
-        // when
+        // expected
         mockMvc.perform(get("/Home/item-list?")
                         .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(searchJson))
                 .andExpect(status().isOk())
                 .andDo(print());
-        // then
 
     }
 
-    @Test @DisplayName("전체 아이템 조회")
+    @Test @DisplayName("QueryDsl 동작 확인")
     void test3() {
         // given
+        // session 으로 부터 사용자 받기
+        User user = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
+                .get();
+
+        // post 만들기
+        Post request = Post.builder()
+                .title("제목 테스트")
+                .userID(user)
+                .favorite(0)
+                .text("내용 테스트")
+                .build();
+
+        // JPAQueryFactory 만들기
+        em.persist(request);
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         // when
+        QPost qPost = new QPost("post");
+
+        Post result = queryFactory
+                .selectFrom(qPost)
+                .fetchOne();
 
         // then
+        assertThat(result).isEqualTo(request);
     }
 
     @Test @DisplayName("아이템 세부 사항")

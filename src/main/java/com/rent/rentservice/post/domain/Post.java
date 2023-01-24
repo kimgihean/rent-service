@@ -1,5 +1,6 @@
 package com.rent.rentservice.post.domain;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.rent.rentservice.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class Post {
     private String text;
 
     protected Post() {}
-    @Builder
+    @Builder @QueryProjection
     public Post(User userID,
                 String title,
                 int favorite,

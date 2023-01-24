@@ -1,15 +1,20 @@
 package com.rent.rentservice.post.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.repository.PostRepositoryImpl;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.request.SearchForm;
+import com.rent.rentservice.user.domain.User;
+import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
 import com.rent.rentservice.util.search.SearchType;
+import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
@@ -33,16 +39,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class PostServiceTest {
     @Autowired
     UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     PostService postService;
-
     @Autowired
     PostRepository postRepository;
 
     @Autowired
     PostRepositoryImpl postRepositoryImpl;
+    @Autowired
+    EntityManager em;
+
     MockHttpSession session;
+    SessionUtil sessionUtil;
 
     @BeforeEach
     void clean() throws Exception {
@@ -108,37 +119,40 @@ public class PostServiceTest {
     @Test @DisplayName("검색으로 아이템 조회")
     void test3() throws Exception {
         // given
-        PostCreateForm postRequest1 = PostCreateForm.builder()
-                .title("한글로 검색합니다")
-                .favorite(0)
-                .text("가나다라마바사")
-                .build();
-        postService.create(postRequest1, session);
+        // session 으로 부터 사용자 받기
+        User user = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
+                .get();
 
-        PostCreateForm postRequest2 = PostCreateForm.builder()
-                .title("영어로 검색합니다")
+        // post 만들기
+        Post request1 = Post.builder()
+                .title("제목 테스트 1")
+                .userID(user)
                 .favorite(0)
-                .text("ABCDEFG")
+                .text("내용 테스트 1")
                 .build();
-        postService.create(postRequest2, session);
+
+        Post request2 = Post.builder()
+                .title("제목 테스트 2")
+                .userID(user)
+                .favorite(0)
+                .text("내용 테스트 2")
+                .build();
+
+        // post Repository 에 저장
+        postRepository.save(request1);
+        postRepository.save(request2);
+
 
         // when
         List<Post> SearchedTitleList = postService
-                .findBySearch(new SearchForm("한글", title));
+                .findBySearch(new SearchForm("제목", title));
         List<Post> SearchedWriterList = postService
                 .findBySearch(new SearchForm("홍길동", writer));
         List<Post> SearchedTitleContextList = postService
-                .findBySearch(new SearchForm("ABC", titleAndContext));
+                .findBySearch(new SearchForm("내용", titleAndContext));
 
-        // then todo : List 가 비어있는 문제 해결
-        assertThat(SearchedTitleContextList.size()).isEqualTo(1);
-        assertThat(SearchedTitleContextList.get(0).getFavorite()).isEqualTo(0);
-//        assertThat(SearchedTitleList).extracting("title")
-//                .containsExactly("한글로 검색합니다");
-//        assertThat(SearchedWriterList).extracting("title")
-//                .containsExactly("한글로 검색합니다", "영어로 검색합니다");
-//        assertThat(SearchedTitleContextList).extracting("title")
-//                .containsExactly("영어로 검색합니다");
+        // then
+        assertThat(SearchedTitleContextList.size()).isEqualTo(2);
     }
 
 }

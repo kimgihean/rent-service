@@ -36,13 +36,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     @Override
     public List<Post> findBySearchUsingQueryDsl(SearchForm condition) {
-        QPost post = QPost.post;
 
         // 생성한 where 조건절 + 시간에 따른 내림차순
         return jpaQueryFactory
                 .selectFrom(post)
                 .where(isSearchable(condition.getContent(), condition.getType()))
-                .orderBy(post.regDate.desc())
                 .fetch();
     }
 
@@ -57,13 +55,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     // 사용자, 제목, 내용에 맞는 조건절 생성
     BooleanBuilder userEqual(String content) {
-        return nullSafeBuilder(() -> post.userID.nickName.eq(content));
+        return nullSafeBuilder(() -> post.userID.nickName.contains(content));
     }
     BooleanBuilder titleEqual(String content) {
-        return nullSafeBuilder(() -> post.title.eq(content));
+        return nullSafeBuilder(() -> post.title.contains(content));
     }
     BooleanBuilder contentEqual(String content) {
-        return nullSafeBuilder(() -> post.text.eq(content));
+        return nullSafeBuilder(() -> post.text.contains(content));
     }
 
     // 조건절 isSearchable 메소드로 리팩토링
