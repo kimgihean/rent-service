@@ -95,7 +95,7 @@ public class MailService {
 
         // 이메일 형식 체크
         if(!CommonUtil.isValidEmail(request.getEmail())) {
-            throw new InvalidEmailPatternException();
+           throw new InvalidEmailPatternException();
         }
 
         if(!mailRepository.existsByEmailAndAuthNum(request.getEmail(), request.getAuthNum())) {
