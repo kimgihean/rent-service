@@ -1,21 +1,14 @@
 package com.rent.rentservice.post.repository;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.rent.rentservice.post.domain.Post;
-import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.request.SearchForm;
-import com.rent.rentservice.util.search.SearchType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-import com.rent.rentservice.util.search.SearchUtil;
+import com.rent.rentservice.util.queryCustom.SearchUtil;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 import static com.rent.rentservice.post.domain.QPost.post;
 
@@ -43,5 +36,20 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .selectFrom(post)
                 .where(SearchUtil.isSearchable(condition.getContent(), condition.getType()))
                 .fetch();
+    }
+
+    // 아이템 조회수 증가 메소드
+    @Override
+    public Post updateViewCount(Long requestId) {
+        jpaQueryFactory
+                .update(post)
+                .set(post.viewCount, post.viewCount.add(1))
+                .where(post.postID.eq(requestId))
+                .execute();
+
+        return jpaQueryFactory
+                .selectFrom(post)
+                .where(post.postID.eq(requestId))
+                .fetchOne();
     }
 }

@@ -1,4 +1,4 @@
-package com.rent.rentservice.util.search;
+package com.rent.rentservice.util.queryCustom;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;

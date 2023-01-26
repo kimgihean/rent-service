@@ -1,4 +1,4 @@
-package com.rent.rentservice.util.search;
+package com.rent.rentservice.util.queryCustom;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

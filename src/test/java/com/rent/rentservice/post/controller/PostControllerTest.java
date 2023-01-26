@@ -14,7 +14,7 @@ import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
 import com.rent.rentservice.util.encryption.AES256;
-import com.rent.rentservice.util.search.SearchType;
+import com.rent.rentservice.util.queryCustom.SearchType;
 import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;

@@ -40,7 +40,7 @@ public class PostController {
         postService.create(request, session);
     }
 
-    // 아이템 상세 조회
+    // 아이템 상세 조회 + 조회수 증가
     @GetMapping(value = "/Home/item-list/{id}")
     public Post item_detail(@PathVariable("id") Long request) {
         Post post = postService.postDetail(request);

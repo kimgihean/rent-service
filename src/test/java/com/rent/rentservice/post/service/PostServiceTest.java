@@ -1,8 +1,6 @@
 package com.rent.rentservice.post.service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.rent.rentservice.post.domain.Post;
-import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.repository.PostRepositoryImpl;
@@ -13,7 +11,6 @@ import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.user.request.JoinForm;
 import com.rent.rentservice.user.request.LoginForm;
 import com.rent.rentservice.user.service.UserService;
-import com.rent.rentservice.util.search.SearchType;
 import com.rent.rentservice.util.session.SessionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.persistence.EntityManager;
@@ -29,13 +25,12 @@ import javax.transaction.Transactional;
 
 import java.util.List;
 
-import static com.rent.rentservice.util.search.SearchType.*;
+import static com.rent.rentservice.util.queryCustom.SearchType.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -182,5 +177,28 @@ public class PostServiceTest {
         // then
         assertThat(post.getPostID()).isEqualTo(postDetail.getPostID());
         assertThat(post.getTitle()).isEqualTo(postDetail.getTitle());
+    }
+
+    @Test @DisplayName("조회수 증가 확인")
+    void test5() throws Exception {
+        //given
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목")
+                .favorite(0)
+                .text("내용")
+                .build();
+
+        postService.create(postRequest, session);
+
+        Post post = postRepository.findAll().get(0);
+        Long postId = post.getPostID();
+
+        //when
+        Post postDetail = postService.postDetail(postId);
+
+        //then
+        //todo 조회수 증가 확인
+        assertThat(post.getViewCount()+1).isEqualTo(postDetail.getViewCount());
+
     }
 }

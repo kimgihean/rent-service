@@ -1,6 +1,6 @@
 package com.rent.rentservice.post.request;
 
-import com.rent.rentservice.util.search.SearchType;
+import com.rent.rentservice.util.queryCustom.SearchType;
 import lombok.Builder;
 import lombok.Data;
 

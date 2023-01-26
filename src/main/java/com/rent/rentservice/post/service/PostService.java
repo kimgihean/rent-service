@@ -56,10 +56,8 @@ public class PostService {
 
     // 게시글 상세 조회
     public Post postDetail(Long requestID){
-        Post post = postRepository.findById(requestID)
-                .orElse(null);
+        Post post = postRepository.updateViewCount(requestID);
 
-        // todo 조회수 +1 기능 구현 (Impl 사용)
         return post;
     }
 //    /**
