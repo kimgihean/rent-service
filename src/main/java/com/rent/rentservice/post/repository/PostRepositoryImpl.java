@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import com.rent.rentservice.util.search.SearchUtil;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -34,46 +35,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         this.jpaQueryFactory = new JPAQueryFactory(em);
     }
 
+    // 검색 custom method
     @Override
     public List<Post> findBySearchUsingQueryDsl(SearchForm condition) {
         // 생성한 where 조건절 + 시간에 따른 내림차순
         return jpaQueryFactory
                 .selectFrom(post)
-                .where(isSearchable(condition.getContent(), condition.getType()))
+                .where(SearchUtil.isSearchable(condition.getContent(), condition.getType()))
                 .fetch();
     }
-
-    // null 값이 오더라도 Safe 로 처리
-    BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> f) {
-        try {
-            return new BooleanBuilder(f.get());
-        } catch (Exception e) {
-            return new BooleanBuilder();
-        }
-    }
-
-    // 사용자, 제목, 내용에 맞는 조건절 생성
-    BooleanBuilder userEqual(String content) {
-        return nullSafeBuilder(() -> post.userID.nickName.contains(content));
-    }
-    BooleanBuilder titleEqual(String content) {
-        return nullSafeBuilder(() -> post.title.contains(content));
-    }
-    BooleanBuilder contentEqual(String content) {
-        return nullSafeBuilder(() -> post.text.contains(content));
-    }
-
-    // 조건절 isSearchable 메소드로 리팩토링
-    BooleanBuilder isSearchable(String content, SearchType searchType) {
-        if(searchType == SearchType.title) { // 제목
-            return titleEqual(content);
-        }
-        else if(searchType == SearchType.writer) { // 사용자
-            return userEqual(content);
-        }
-        else { // 제목 + 내용
-            return titleEqual(content).or(contentEqual(content));
-        }
-    }
-
 }

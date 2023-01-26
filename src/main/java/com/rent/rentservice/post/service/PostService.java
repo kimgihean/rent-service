@@ -41,6 +41,7 @@ public class PostService {
                 .title(request.getTitle())
                 .text(request.getText())
                 .favorite(0)
+                .viewCount(0)
                 .build();
 
         postRepository.save(post);
