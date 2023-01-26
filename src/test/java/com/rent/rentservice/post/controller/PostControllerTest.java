@@ -191,11 +191,29 @@ public class PostControllerTest {
     }
 
     @Test @DisplayName("아이템 세부 사항")
-    void test4() {
+    void test4() throws Exception {
         // given
+        // 1. 아이템 게시글 저장
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목")
+                .favorite(0)
+                .text("내용")
+                .build();
+
+        postService.create(postRequest, session);
+
+        Long postIdn = postRepository.findAll().get(0)
+                .getPostID();
 
         // when
+        String detailJson = objectMapper.writeValueAsString(postIdn);
 
+        mockMvc.perform(get("/Home/item-list/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(detailJson))
+                .andExpect(status().isOk())
+                .andDo(print());
         // then
+
     }
 }

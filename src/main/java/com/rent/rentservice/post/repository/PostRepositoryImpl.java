@@ -36,7 +36,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     @Override
     public List<Post> findBySearchUsingQueryDsl(SearchForm condition) {
-
         // 생성한 where 조건절 + 시간에 따른 내림차순
         return jpaQueryFactory
                 .selectFrom(post)

@@ -40,9 +40,10 @@ public class PostController {
         postService.create(request, session);
     }
 
-    // 아이템 상세 목록 조회
-    @GetMapping(value = "/Home/item-list/item-id")
-    public void item_detail() {
-
+    // 아이템 상세 조회
+    @GetMapping(value = "/Home/item-list/{id}")
+    public Post item_detail(@PathVariable("id") Long request) {
+        Post post = postService.postDetail(request);
+        return post;
     }
 }

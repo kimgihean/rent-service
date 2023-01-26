@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,6 @@ public class PostService {
 
     // 글 등록
     public void create(PostCreateForm request,HttpSession session) throws Exception{
-
         //세션 아웃 검사
         if(SessionUtil.checkValidSession(session)) {
             throw new SessionNotFoundException();
@@ -53,34 +53,42 @@ public class PostService {
         return searchPostList;
     }
 
-    /**
-     * @description build the post constructor
-     * @param post
-     * @return post builder
-     */
-    private Post convertEntityInPost(@NotNull Post post) {
-        return post.builder()
-                .title(post.getTitle())
-                .favorite(post.getFavorite())
-                .text(post.getText())
-                .build();
+    // 게시글 상세 조회
+    public Post postDetail(Long requestID){
+        Post post = postRepository.findById(requestID)
+                .orElse(null);
+
+        // todo 조회수 +1 기능 구현 (Impl 사용)
+        return post;
     }
-
-    /**
-     * @description Find all post by post ID
-     * @param ID
-     * @return new post object
-     */
-    public List<Post> findByID(Long ID) {
-        List<Post> postList = postRepository.findByPostID(ID);
-        List<Post> postListByID = new ArrayList<>();
-
-        if(postList.isEmpty()) return postListByID; //todo exception 처리
-
-        for(Post post : postList) {
-            postListByID.add(this.convertEntityInPost(post));
-        }
-
-        return postListByID;
-    }
+//    /**
+//     * @description build the post constructor
+//     * @param post
+//     * @return post builder
+//     */
+//    private Post convertEntityInPost(@NotNull Post post) {
+//        return post.builder()
+//                .title(post.getTitle())
+//                .favorite(post.getFavorite())
+//                .text(post.getText())
+//                .build();
+//    }
+//
+//    /**
+//     * @description Find all post by post ID
+//     * @param ID
+//     * @return new post object
+//     */
+//    public List<Post> findByID(Long ID) {
+//        List<Post> postList = postRepository.findByPostID(ID);
+//        List<Post> postListByID = new ArrayList<>();
+//
+//        if(postList.isEmpty()) return postListByID; //todo exception 처리
+//
+//        for(Post post : postList) {
+//            postListByID.add(this.convertEntityInPost(post));
+//        }
+//
+//        return postListByID;
+//    }
 }

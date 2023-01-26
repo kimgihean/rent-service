@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.persistence.EntityManager;
@@ -32,6 +33,9 @@ import static com.rent.rentservice.util.search.SearchType.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -128,7 +132,7 @@ public class PostServiceTest {
                 .title("제목 테스트 1")
                 .userID(user)
                 .favorite(0)
-                .text("내용 테스트 1")
+                .text("테스트 1")
                 .build();
 
         Post request2 = Post.builder()
@@ -147,12 +151,36 @@ public class PostServiceTest {
         List<Post> SearchedTitleList = postService
                 .findBySearch(new SearchForm("제목", title));
         List<Post> SearchedWriterList = postService
-                .findBySearch(new SearchForm("홍길동", writer));
+                .findBySearch(new SearchForm("닉네임", writer));
         List<Post> SearchedTitleContextList = postService
                 .findBySearch(new SearchForm("내용", titleAndContext));
 
         // then
-        assertThat(SearchedTitleContextList.size()).isEqualTo(2);
+        assertThat(SearchedTitleContextList.size()).isEqualTo(1);
+        assertThat(SearchedTitleList.size()).isEqualTo(2);
+        assertThat(SearchedWriterList).extracting("title")
+                .containsExactlyInAnyOrder("제목 테스트 1", "제목 테스트 2");
     }
 
+    @Test @DisplayName("아이템 상세 조회")
+    void test4() throws Exception {
+        // given
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목")
+                .favorite(0)
+                .text("내용")
+                .build();
+
+        postService.create(postRequest, session);
+
+        Post post = postRepository.findAll().get(0);
+        Long postId = post.getPostID();
+
+        // when
+        Post postDetail = postService.postDetail(postId);
+
+        // then
+        assertThat(post.getPostID()).isEqualTo(postDetail.getPostID());
+        assertThat(post.getTitle()).isEqualTo(postDetail.getTitle());
+    }
 }
