@@ -182,13 +182,21 @@ public class PostServiceTest {
     @Test @DisplayName("조회수 증가 확인")
     void test5() throws Exception {
         //given
-        PostCreateForm postRequest = PostCreateForm.builder()
+        // session 으로 부터 사용자 받기
+        User user = userRepository.findById(sessionUtil.getLoginMemberIdn(session))
+                .orElse(null);
+
+        // post 만들기
+        Post request1 = Post.builder()
                 .title("제목")
+                .userID(user)
                 .favorite(0)
                 .text("내용")
+                .viewCount(10)
                 .build();
 
-        postService.create(postRequest, session);
+        // post Repository 에 저장
+        postRepository.save(request1);
 
         Post post = postRepository.findAll().get(0);
         Long postId = post.getPostID();
