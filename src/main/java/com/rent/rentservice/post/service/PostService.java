@@ -10,6 +10,7 @@ import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,10 @@ public class PostService {
         postRepository.save(post);
     }
 
+    // 전체 게시글 조회
+    public PageImpl<Post> getAll() {
+        //todo
+    }
     // 검색에 따른 게시글 조회
     @Transactional
     public List<Post> findBySearch(SearchForm condition) {
