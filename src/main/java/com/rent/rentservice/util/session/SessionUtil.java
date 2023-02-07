@@ -1,5 +1,7 @@
 package com.rent.rentservice.util.session;
 
+import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.exception.*;
 import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.request.UserSessionInfo;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,6 +27,15 @@ public class SessionUtil {
             return true;
         }
         return false;
+    }
+
+    // Post, Session 권한 확인 -> 예외처리
+    public static void checkPostAuth(HttpSession session, Post post) {
+        Long postUserId = post.getUserID().getUserId();
+        Long sessionUserId = getLoginMemberIdn(session);
+        if(sessionUserId != postUserId) {
+            throw new UpdatePostSessionException();
+        }
     }
 
     public static String getLoginMemberNickname(HttpSession session) {

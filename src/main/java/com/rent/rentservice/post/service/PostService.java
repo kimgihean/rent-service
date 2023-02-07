@@ -2,6 +2,7 @@ package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
+import com.rent.rentservice.post.exception.UpdatePostSessionException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
 import com.rent.rentservice.post.request.PostUpdateForm;
@@ -11,15 +12,13 @@ import com.rent.rentservice.user.repository.UserRepository;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.util.session.SessionUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static com.rent.rentservice.util.session.SessionUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class PostService {
         }
 
         //회원 정보 조회 검사
-        User loginSessionID = userRepository.findById(SessionUtil.getLoginMemberIdn(session))
+        User loginSessionID = userRepository.findById(getLoginMemberIdn(session))
                 .orElseThrow(UserNotFoundException::new);
 
         Post post = Post.builder()
@@ -69,9 +68,12 @@ public class PostService {
     }
 
     // 게시글 업데이트
-    public Post update(Long id, PostUpdateForm postUpdateForm) {
+    public Post update(Long id, PostUpdateForm postUpdateForm, HttpSession session) {
         Post existPost = postRepository.findById(id)
                 .orElse(null);
+
+        // 세션에 등록된 사용자의 게시글에 수정 삭제 권한 부여 -> 예외처리
+        checkPostAuth(session, existPost);
 
         if(existPost.getTitle() != postUpdateForm.getTitle())
             existPost.setTitle(postUpdateForm.getTitle());
@@ -85,9 +87,12 @@ public class PostService {
     }
 
     // 게시글 삭제
-    public void delete(Long id) {
+    public void delete(Long id, HttpSession session) {
         Post existPost = postRepository.findById(id)
                 .orElse(null);
+
+        // 세션에 등록된 사용자의 게시글에 수정 삭제 권한 부여 -> 예외처리
+        checkPostAuth(session, existPost);
 
         postRepository.delete(existPost);
     }

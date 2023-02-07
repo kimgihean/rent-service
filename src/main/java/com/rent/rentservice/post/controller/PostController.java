@@ -53,15 +53,15 @@ public class PostController {
 
     // 아이템 업데이트
     @PatchMapping(value = "/Home/item-list/update-{id}")
-    public Post itemUpdate(@RequestBody @Valid PostUpdateForm postUpdateForm, @PathVariable("id") Long id) throws Exception{
-        Post updatePost = postService.update(id, postUpdateForm);
+    public Post itemUpdate(@RequestBody @Valid PostUpdateForm postUpdateForm, @PathVariable("id") Long id,HttpSession session) throws Exception{
+        Post updatePost = postService.update(id, postUpdateForm, session);
 
         return updatePost;
     }
 
     // 아이템 삭제
     @DeleteMapping(value = "/Home/item-list/delete-{id}")
-    public void itemDelete(@PathVariable("id") Long id) {
-        postService.delete(id);
+    public void itemDelete(@PathVariable("id") Long id, HttpSession session) {
+        postService.delete(id, session);
     }
 }
