@@ -3,6 +3,7 @@ package com.rent.rentservice.post.controller;
 import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.PostUpdateForm;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,6 @@ public class PostController {
 
         return posts;
     }
-    // 전체 조회 todo
-    @GetMapping(value = "/Home/item-list")
-    public PageImpl<Post> getAllPost(PageRequest pageRequest) {
-        Pageable pageable = pageRequest.of();
-        //PageImpl<Post> result = (PageImpl<Post>) postRepository.findAll(pageable);
-        PageImpl<Post> result = postService.getAll(pageable);
-        return result;
-    }
 
     // 검색에 따른 전체 조회
     @GetMapping(value = "/Home/item-list?")
@@ -53,8 +46,22 @@ public class PostController {
 
     // 아이템 상세 조회 + 조회수 증가
     @GetMapping(value = "/Home/item-list/{id}")
-    public Post item_detail(@PathVariable("id") Long request) {
+    public Post item_detail(@RequestParam @PathVariable("id") Long request) {
         Post post = postService.postDetail(request);
         return post;
+    }
+
+    // 아이템 업데이트
+    @PatchMapping(value = "/Home/item-list/update-{id}")
+    public Post itemUpdate(@RequestBody @Valid PostUpdateForm postUpdateForm, @PathVariable("id") Long id) throws Exception{
+        Post updatePost = postService.update(id, postUpdateForm);
+
+        return updatePost;
+    }
+
+    // 아이템 삭제
+    @DeleteMapping(value = "/Home/item-list/delete-{id}")
+    public void itemDelete(@PathVariable("id") Long id) {
+        postService.delete(id);
     }
 }

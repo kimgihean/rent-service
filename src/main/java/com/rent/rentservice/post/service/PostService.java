@@ -4,6 +4,7 @@ import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.PostUpdateForm;
 import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.exception.UserNotFoundException;
 import com.rent.rentservice.user.repository.UserRepository;
@@ -48,10 +49,6 @@ public class PostService {
         postRepository.save(post);
     }
 
-    // 전체 게시글 조회
-    public PageImpl<Post> getAll() {
-        //todo
-    }
     // 검색에 따른 게시글 조회
     @Transactional
     public List<Post> findBySearch(SearchForm condition) {
@@ -61,8 +58,37 @@ public class PostService {
 
     // 게시글 상세 조회
     public Post postDetail(Long requestID){
-        Post post = postRepository.updateViewCount(requestID);
+        Post byId = postRepository.findById(requestID)
+                .orElse(null);
 
-        return post;
+        //Post post = postRepository.updateViewCount(requestID);
+
+        byId.setViewCount(byId.getViewCount() + 1);
+
+        return byId;
+    }
+
+    // 게시글 업데이트
+    public Post update(Long id, PostUpdateForm postUpdateForm) {
+        Post existPost = postRepository.findById(id)
+                .orElse(null);
+
+        if(existPost.getTitle() != postUpdateForm.getTitle())
+            existPost.setTitle(postUpdateForm.getTitle());
+        if(existPost.getText() != postUpdateForm.getText())
+            existPost.setText(postUpdateForm.getText());
+
+        postRepository.save(existPost);
+
+        return existPost;
+
+    }
+
+    // 게시글 삭제
+    public void delete(Long id) {
+        Post existPost = postRepository.findById(id)
+                .orElse(null);
+
+        postRepository.delete(existPost);
     }
 }

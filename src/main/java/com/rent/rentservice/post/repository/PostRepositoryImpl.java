@@ -46,7 +46,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .set(post.viewCount, post.viewCount.add(1))
                 .where(post.postID.eq(requestId))
                 .execute();
-
+        
         return jpaQueryFactory
                 .selectFrom(post)
                 .where(post.postID.eq(requestId))

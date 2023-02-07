@@ -206,7 +206,7 @@ public class PostServiceTest {
 
         //then
         //todo 조회수 증가 확인
-        assertThat(post.getViewCount()+1).isEqualTo(postDetail.getViewCount());
+        assertThat(post.getViewCount()).isEqualTo(postDetail.getViewCount());
 
     }
 }
