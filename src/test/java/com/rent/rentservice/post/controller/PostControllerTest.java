@@ -6,6 +6,7 @@ import com.rent.rentservice.post.domain.Post;
 import com.rent.rentservice.post.domain.QPost;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.PostUpdateForm;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.post.service.PostService;
 import com.rent.rentservice.user.domain.User;
@@ -31,8 +32,7 @@ import javax.transaction.Transactional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -212,6 +212,68 @@ public class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
         // then
+
+    }
+
+    @Test @DisplayName("게시글 수정")
+    void test5() throws Exception{
+        //todo 400 error 수정
+        //given
+        //게시글 저장
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목")
+                .favorite(0)
+                .text("내용")
+                .build();
+
+        postService.create(postRequest, session);
+
+        //게시글 수정
+        PostUpdateForm postUpdateForm = PostUpdateForm.builder()
+                .title("제목 변경")
+                .text("내용 변경")
+                .build();
+
+        String updatePostJson = objectMapper.writeValueAsString(postUpdateForm);
+        String existPostId = objectMapper
+                .writeValueAsString(postRepository.findAll().get(0).getPostID());
+
+        //when
+        mockMvc.perform(patch("/Home/item-list/update-{id}", existPostId)
+                    .session(session)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(updatePostJson)
+                    .content(existPostId))
+                        .andExpect(status().isOk())
+                                .andDo(print()); // 400
+        //then
+
+    }
+
+    @Test @DisplayName("게시글 삭제")
+    void test6() throws Exception{
+        //given
+        //게시글 저장
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목")
+                .favorite(0)
+                .text("내용")
+                .build();
+
+        postService.create(postRequest, session);
+
+        String existPostId = objectMapper
+                .writeValueAsString(postRepository.findAll().get(0).getPostID());
+
+        mockMvc.perform(delete("/Home/item-list/delete-{id}", existPostId)
+                .session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(existPostId))
+                .andExpect(status().isOk())
+                .andDo(print());
+        //when
+
+        //then
 
     }
 }

@@ -1,6 +1,7 @@
 package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.exception.NonePostException;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
 import com.rent.rentservice.post.exception.UpdatePostSessionException;
 import com.rent.rentservice.post.repository.PostRepository;
@@ -56,13 +57,14 @@ public class PostService {
     }
 
     // 게시글 상세 조회
-    public Post postDetail(Long requestID){
+    public Post postDetail(Long requestID) throws Exception {
         Post byId = postRepository.findById(requestID)
-                .orElse(null);
+                .orElseThrow(() -> new NonePostException());
 
         //Post post = postRepository.updateViewCount(requestID);
 
         byId.setViewCount(byId.getViewCount() + 1);
+
 
         return byId;
     }

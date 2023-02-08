@@ -1,10 +1,13 @@
 package com.rent.rentservice.post.service;
 
 import com.rent.rentservice.post.domain.Post;
+import com.rent.rentservice.post.exception.NonePostException;
 import com.rent.rentservice.post.exception.SessionNotFoundException;
+import com.rent.rentservice.post.exception.UpdatePostSessionException;
 import com.rent.rentservice.post.repository.PostRepository;
 import com.rent.rentservice.post.repository.PostRepositoryImpl;
 import com.rent.rentservice.post.request.PostCreateForm;
+import com.rent.rentservice.post.request.PostUpdateForm;
 import com.rent.rentservice.post.request.SearchForm;
 import com.rent.rentservice.user.domain.User;
 import com.rent.rentservice.user.repository.UserRepository;
@@ -208,5 +211,86 @@ public class PostServiceTest {
         //todo 조회수 증가 확인
         assertThat(post.getViewCount()).isEqualTo(postDetail.getViewCount());
 
+    }
+
+    @Test @DisplayName("게시글 수정(업데이트)")
+    void test6() throws Exception{
+        //given
+        //게시글 생성
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목 테스트")
+                .favorite(0)
+                .text("내용 테스트")
+                .build();
+
+        postService.create(postRequest, session);
+
+        //게시글 id값 찾기
+        Post existPost = postRepository.findAll().get(0);
+
+        //updateForm
+        PostUpdateForm postUpdateForm = PostUpdateForm.builder()
+                .title("제목 변경")
+                .text("내용 변경")
+                .build();
+
+        //when
+        Post updatePost = postService.update(existPost.getPostID(), postUpdateForm, session);
+
+        //then
+        assertEquals(updatePost.getTitle(), postUpdateForm.getTitle());
+
+    }
+
+    @Test @DisplayName("게시글 삭제 후 게시글 조희시 예외 처리")
+    void text7() throws Exception{
+        //given
+        //게시글 생성
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목 테스트")
+                .favorite(0)
+                .text("내용 테스트")
+                .build();
+
+        postService.create(postRequest, session);
+
+        //게시글 id값 찾기
+        Post existPost = postRepository.findAll().get(0);
+
+        //when
+        postService.delete(existPost.getPostID(), session);
+
+        //then
+        assertThrows(NonePostException.class, () ->{
+            postService.postDetail(existPost.getPostID());
+        });
+    }
+
+    @Test @DisplayName("게시글 수정시 세션 권한 예외처리")
+    void test8() throws Exception{
+        //given
+        //게시글 생성
+        PostCreateForm postRequest = PostCreateForm.builder()
+                .title("제목 테스트")
+                .favorite(0)
+                .text("내용 테스트")
+                .build();
+
+        postService.create(postRequest, session);
+        Post existPost = postRepository.findAll().get(0);
+
+        //updateForm
+        PostUpdateForm postUpdateForm = PostUpdateForm.builder()
+                .title("제목 변경")
+                .text("내용 변경")
+                .build();
+
+        // 다른 세션 생성
+        MockHttpSession tmpSession = new MockHttpSession();
+
+        //expected
+        assertThrows(UpdatePostSessionException.class, () -> {
+            postService.update(existPost.getPostID(), postUpdateForm, tmpSession);
+        });
     }
 }

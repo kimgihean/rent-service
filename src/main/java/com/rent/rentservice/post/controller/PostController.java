@@ -46,14 +46,14 @@ public class PostController {
 
     // 아이템 상세 조회 + 조회수 증가
     @GetMapping(value = "/Home/item-list/{id}")
-    public Post item_detail(@RequestParam @PathVariable("id") Long request) {
+    public Post item_detail(@RequestParam @PathVariable("id") Long request) throws Exception {
         Post post = postService.postDetail(request);
         return post;
     }
 
     // 아이템 업데이트
     @PatchMapping(value = "/Home/item-list/update-{id}")
-    public Post itemUpdate(@RequestBody @Valid PostUpdateForm postUpdateForm, @PathVariable("id") Long id,HttpSession session) throws Exception{
+    public Post itemUpdate(@RequestBody PostUpdateForm postUpdateForm, @PathVariable("id") Long id,HttpSession session) throws Exception{
         Post updatePost = postService.update(id, postUpdateForm, session);
 
         return updatePost;
